@@ -8,15 +8,16 @@ import (
 
 var (
 	rgb = [3]uint8{255, 0, 0}
-	interval = time.Millisecond * 20
+	interval = time.Millisecond * 10
 )
 
 func main() {
 
 	dec := 0
-	inc := 1
 
 	for {
+		inc := (dec + 1) % 3
+
 		for rgb[inc] < 255 {
 			rgb[inc] = rgb[inc] + 5
 			print(rgb)
@@ -27,8 +28,7 @@ func main() {
 			print(rgb)
 		}
 
-		inc = (inc + 1) % 3
-		dec = (dec +1) % 3
+		dec = (dec + 1) % 3
 	}
 
 }
