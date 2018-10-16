@@ -7,15 +7,13 @@ import (
 )
 
 var (
-	rgb = [3]uint8{255, 0, 0}
+	rgb             = [3]uint8{255, 0, 0}
 	increment uint8 = 1
-	interval = time.Millisecond * 10
-	limiter chan struct{}
+	interval        = time.Millisecond * 10
+	limiter         = make(chan struct{})
 )
 
-
 func main() {
-	limiter = make(chan struct{})
 
 	go func() {
 		for range time.NewTicker(interval).C {
@@ -27,20 +25,23 @@ func main() {
 
 	for {
 		inc := (dec + 1) % 3
-
-		for rgb[inc] < 255 {
-			rgb[inc] = rgb[inc] + increment
-			<-limiter
-			print(rgb)
-		}
-
-		for rgb[dec] > 0 {
-			rgb[dec] = rgb[dec] - increment
-			<-limiter
-			print(rgb)
-		}
-
+		colourCycle(dec, inc)
 		dec = (dec + 1) % 3
+	}
+}
+
+func colourCycle(dec, inc int) {
+
+	for rgb[inc] < 255 {
+		rgb[inc] += increment
+		<-limiter
+		print(rgb)
+	}
+
+	for rgb[dec] > 0 {
+		rgb[dec] -= increment
+		<-limiter
+		print(rgb)
 	}
 }
 
