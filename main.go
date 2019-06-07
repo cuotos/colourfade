@@ -2,24 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/aybabtme/rgbterm"
 	"time"
+	"github.com/aybabtme/rgbterm"
 )
 
 var (
 	rgb             = [3]uint8{255, 0, 0}
 	increment uint8 = 1
 	interval        = time.Millisecond * 10
-	limiter         = make(chan struct{})
+	limiter         = make(<-chan time.Time)
 )
 
 func main() {
 
-	go func() {
-		for range time.NewTicker(interval).C {
-			limiter <- struct{}{}
-		}
-	}()
+	limiter = time.NewTicker(interval).C
 
 	dec := 0
 
@@ -49,5 +45,6 @@ func print(rgb [3]uint8) {
 	s := fmt.Sprintf("R: %03d, G: %03d, B: %03d - #%02[1]x%02[2]x%02[3]x\n", rgb[0], rgb[1], rgb[2])
 
 	coloredWord := rgbterm.FgString(s, rgb[0], rgb[1], rgb[2])
+
 	fmt.Print(coloredWord)
 }
