@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"github.com/aybabtme/rgbterm"
+	"github.com/veandco/go-sdl2/sdl"
+	"time"
 )
 
 var (
@@ -13,8 +14,20 @@ var (
 	limiter         = make(<-chan time.Time)
 )
 
-func main() {
+func main(){
+	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+		panic(err)
+	}
+	defer sdl.Quit()
 
+	window, err := sdl.CreateWindow("colour fade", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, 800, 600, sdl.WINDOW_SHOWN|sdl.WINDOW_RESIZABLE)
+	if err != nil {
+		panic(err)
+	}
+	defer window.Destroy()
+}
+
+func old() {
 	limiter = time.NewTicker(interval).C
 
 	dec := 0
